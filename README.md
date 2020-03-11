@@ -1,24 +1,18 @@
 # Calculator App Requirements and Pseudocodo
 ## 1. You must not use eval()
-    #### Pseudocode
-    1. test
-    2. test
-    3. test
-    4. test
-    5. test
-    6. test
-    7. test 
+#### P
+
 ## 2. The calculator must be Object Oriented, utilizing `Class`, not Object.prototype
 ## 3. The app should be completely rendered via JS, no HTML besides a `<div id="app">`
 ## 4. The calculator should have a display area at the top.
 ## 5. The display should show `0` by default.
 ## 6. The calculator should have 6 function buttons:
-    1. Division `/`
-    2. Multiplication `*`
-    3. Subtraction `-`
-    4. Addition `+`
-    5. Calculate `=`
-    6. Clear `c`
+    Division `/`
+    Multiplication `*`
+    Subtraction `-`
+    Addition `+`
+    Calculate `=`
+    Clear `c`
 ## 7. The calculator should have 10 number buttons, `0-9`.
 ## 8. The calculator should have a decimal button `.`
 ## 9.  The display area should update as a user presses buttons.

@@ -8,6 +8,7 @@ calcApp.className = 'container mt-5 bg-secondary'
 class Model {
     constructor(displayValue, displayFull) {
         this.displayValue = '0';
+        this.displayFull = []
     }
     setView(view) {
         this.view = view;
@@ -15,6 +16,8 @@ class Model {
 
     updateDisplay(clicked_id) {
         let theNumbers = '1234567890'
+        let theOperands = '/*-+'
+
         let button = document.getElementById(clicked_id)
 
         if (this.displayValue === '0' && theNumbers.includes(button.innerHTML)) {
@@ -24,6 +27,12 @@ class Model {
             // console.log('HEY')
             this.displayValue += button.innerHTML.charAt()
 
+        } else if (theOperands.includes(button.innerHTML)) {
+            this.displayFull = this.view.controller.operand(this.displayFull, this.displayValue, button.innerHTML)
+
+        } else if (button.innerHTML === '=' || this.displayFull.length === 3) {
+            this.view.controller.math(this.displayFull)
+            
         } else if (button.innerHTML === 'C') {
             this.view.controller.clear();
         }
@@ -42,6 +51,31 @@ class Controller {
 
     clear() {
         this.model.displayValue = '0'
+        this.model.displayFull = []
+    }
+
+    operand(arr, str, operator) {
+        arr.push(str)
+        arr.push(operator)
+        this.model.displayValue = '0'
+        return arr
+    }
+
+    math(arr) {
+        if (arr[1] === '+') {
+            this.model.displayValue = arr[0] + arr[2]
+        }
+        if (arr[1] === '-') {
+            this.model.displayValue = arr[0] - arr[2]
+        }
+        if (arr[1] === '*') {
+            this.model.displayValue = arr[0] * arr[2]
+        }
+        if (arr[1] === '/') {
+            this.model.displayValue = arr[0] / arr[2]
+        }
+        this.model.displayFull = []
+        this.model.displayFull.push(this.model.displayValue)
     }
 }
 
@@ -107,7 +141,7 @@ class View {
                 }
             }
         }
-    } 
+    }
 
 }
 

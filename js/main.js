@@ -14,32 +14,39 @@ class Model {
         this.view = view;
     }
 
-    updateDisplay(clicked_id) {
+    updateState(clicked_id) {
         let theNumbers = '1234567890'
         let theOperands = '/*-+'
 
         let button = document.getElementById(clicked_id)
 
-        if (this.displayValue === '0' && theNumbers.includes(button.innerHTML)) {
+        if (button.innerHTML === '=' || this.displayFull.length === 2) {
+            this.displayFull.push(button.innerHTML)
+            this.view.controller.math(this.displayFull)
+            // console.log('here4')
+        }
+        else if (theOperands.includes(button.innerHTML)) {
+            this.displayFull = this.view.controller.operand(this.displayFull, this.displayValue, button.innerHTML)
+            // console.log('here3')
+        }
+        else if (this.displayValue === '0' && theNumbers.includes(button.innerHTML)) {
             this.displayValue = button.innerHTML
-
-        } else if (theNumbers.includes(button.innerHTML)) {
+            // console.log('here1')
+        }
+        else if (theNumbers.includes(button.innerHTML)) {
             // console.log('HEY')
             this.displayValue += button.innerHTML.charAt()
-
-        } else if (theOperands.includes(button.innerHTML)) {
-            this.displayFull = this.view.controller.operand(this.displayFull, this.displayValue, button.innerHTML)
-
-        } else if (button.innerHTML === '=' || this.displayFull.length === 3) {
-            this.view.controller.math(this.displayFull)
-            
-        } else if (button.innerHTML === 'C') {
+            // console.log('here2')
+        }
+        if (button.innerHTML === 'C') {
             this.view.controller.clear();
+            // console.log('here5')
         }
         // console.log('hello')
+        // console.log(this.displayFull)
+        // console.log(this.displayValue)
         this.view.buildCalculator()
     }
-
 }
 
 /* --------------------------------------------- Controller Object --------------------------------------------- */
@@ -55,15 +62,20 @@ class Controller {
     }
 
     operand(arr, str, operator) {
-        arr.push(str)
-        arr.push(operator)
-        this.model.displayValue = '0'
-        return arr
+        if (arr[0] === undefined) {
+            arr.push(str)
+            arr.push(operator)
+            return arr
+        } else {
+            arr.push(operator)
+            return arr
+        }
     }
 
     math(arr) {
         if (arr[1] === '+') {
-            this.model.displayValue = arr[0] + arr[2]
+            this.model.displayValue = Number(arr[0]) + Number(arr[2])
+            console.log('here+')
         }
         if (arr[1] === '-') {
             this.model.displayValue = arr[0] - arr[2]
@@ -74,8 +86,7 @@ class Controller {
         if (arr[1] === '/') {
             this.model.displayValue = arr[0] / arr[2]
         }
-        this.model.displayFull = []
-        this.model.displayFull.push(this.model.displayValue)
+        this.model.displayFull = [this.model.displayValue]
     }
 }
 
@@ -137,7 +148,7 @@ class View {
                     let col = this.createElement('h3', 'col-3 text-center border hoverClass mb-0', 'col' + buttonsArr[buttonsCount], buttonsArr[buttonsCount])
                     row.appendChild(col)
                     buttonsCount++
-                    col.addEventListener('click', function () { model.updateDisplay(this.id) })
+                    col.addEventListener('click', function () { model.updateState(this.id) })
                 }
             }
         }
@@ -145,7 +156,7 @@ class View {
 
 }
 
-/* --------------------------------------------- Calculator objects and Logic --------------------------------------------- */
+/* --------------------------------------------- Calculator Objects  --------------------------------------------- */
 
 let model = new Model()
 let controller = new Controller(model)

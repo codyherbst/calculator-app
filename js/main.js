@@ -6,90 +6,114 @@ calcApp.className = 'container mt-5 bg-secondary'
 class Model {
     constructor(displayValue, displayFull, operandPressed) {
         this.displayValue = '0';        // this is what shows up on display
-        this.displayFull = []           // th
-        this.operandPressed = false;    //
-        this.decimalPressed = false;
-        this.lastIsEqual = false;
+        this.displayFull = [];          // this is behind the scenes to do math
+        this.operandPressed = false;    // bool for operand
+        this.decimalPressed = false;    // bool for decimal
+        this.lastIsEqual = false;       // bool for equal
     }
     setView(view) {
         this.view = view;
     }
 
     updateState(clicked_id) {
-        //conditions that need to be met:
-        //double clicking operand
+        //To Do:
+        //need to allow x + y + z. currently have to press equal
+        //needs to allow multiple digits entered in on second number instead of immediate math - done somewhat
         //needs to show last digit put in when equals needs to be hit - done
-        //needs to allow multiple digits entered in on second number instead of immediate math - done
-        //need to implement decimal
+        //need to implement decimal - done
 
 
-        let theNumbers = '1234567890'
-        let theOperands = '/*-+'
+        let theNumbers = '1234567890';
+        let theOperands = '/*-+';
 
         let button = document.getElementById(clicked_id)
 
+        //if divided by zero, set everything back to base values
         if (this.displayValue === 'Infinity') {
-            this.displayValue = '0'
-            this.displayFull = []
+            this.displayValue = '0';
+            this.displayFull = [];
         }
+
+        //this if is when the = is pressed
         if (button.innerHTML === '=') {
             if (this.displayFull.length === 1) {
-                this.displayValue = this.displayFull[0]
+                this.displayValue = this.displayFull[0];
             } else {
-                this.view.controller.math(this.displayFull, this.displayValue)
+                this.view.controller.math(this.displayFull, this.displayValue);
             }
-            console.log('here6')
+            console.log('here6');
             this.lastIsEqual = true;
 
-        } else if (this.displayFull.length === 2 && !theOperands.includes(button.innerHTML)) {
-            console.log('what')
-            this.displayValue = button.innerHTML
-            this.view.controller.math(this.displayFull, this.displayValue)
-            this.displayValue = this.displayFull[0]
-            console.log(this.displayFull)
+        //this allows user to change the operand
+        }else if (this.operandPressed && theOperands.includes(button.innerHTML)) {
+                this.displayFull[1] = button.innerHTML;
+                
+            //this if is when multiple operands are pressed in a row
+        } else if (this.displayFull.length === 2 && theOperands.includes(button.innerHTML)) {
+            // console.log('what');
+            this.view.controller.math(this.displayFull, this.displayValue);
+            this.displayValue = this.displayFull[0];
+            this.displayFull.push(button.innerHTML);
+            this.operandPressed = true;
+            console.log(this.displayFull);
             console.log('here1')
-        }
-        else if (theOperands.includes(button.innerHTML)) {
+
+            //this if checks for operands
+        } else if (theOperands.includes(button.innerHTML)) {
             if (!theOperands.includes(this.displayFull[this.displayFull.length - 1])) {
                 this.operandPressed = true;
-                this.displayFull = this.view.controller.operand(this.displayFull, this.displayValue, button.innerHTML)
-                console.log('here2')
+                this.displayFull = this.view.controller.operand(this.displayFull, this.displayValue, button.innerHTML);
+                console.log('here2');
             }
             // console.log(this.operandPressed)
         }
+
+        //this sets it so that if = is pressed and a new number is pressed, we take that new number as dispalyvalue
         else if (this.lastIsEqual) {
             this.displayValue = button.innerHTML;
-            // this.displayFull = []
             this.lastIsEqual = false;
         }
+
+        //this is for the very first input - checks display value and what button is pressed
         else if (this.displayValue === '0' && theNumbers.includes(button.innerHTML)) {
-            this.displayValue = button.innerHTML
-            console.log('here3')
+            this.displayValue = button.innerHTML;
+            console.log('here3');
         }
+
+        //this allows for multiple digits to be pressed
         else if (theNumbers.includes(button.innerHTML)) {
 
             if (this.operandPressed) {
-                console.log('made it')
+                console.log('made it');
                 this.displayValue = button.innerHTML;
                 this.operandPressed = false;
             } else {
-                this.displayValue += button.innerHTML.charAt()
+                this.displayValue += button.innerHTML.charAt();
             }
-            console.log('here4')
+            console.log('here4');
         }
+
+        //this checks for decimal pressed and for more than one pressed
         if (!this.decimalPressed && button.innerHTML === '.') {
-            this.displayValue += '.'
+            this.displayValue += '.';
+            this.decimalPressed = true;
+            // console.log('hereDecimal');
         }
+
+        //this calls clear function when needed
         if (button.innerHTML === 'C') {
             this.view.controller.clear();
             this.operandPressed = false;
-            console.log('here5')
+            console.log('here5');
         }
+
         // console.log('hello')
         // console.log(this.displayFull)
         // console.log(this.displayValue)
 
-        console.log(this.displayFull)
+
+
+        // console.log(this.displayFull)
         this.view.buildCalculator()
     }
 }

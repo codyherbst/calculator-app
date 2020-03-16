@@ -216,6 +216,8 @@ class View {
 
             if (i === 0) {
                 row.className += ' bg-success'
+            } else {
+                row.className += ' '
             }
 
             for (let j = 0; j < 4; j++) {

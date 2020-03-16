@@ -1,3 +1,8 @@
 .hoverClass:hover {
     background-color: rgba(0, 0, 250, .2);
 }
+
+#calcDisplay {
+    max-width: 268;
+    overflow: scroll;
+}
